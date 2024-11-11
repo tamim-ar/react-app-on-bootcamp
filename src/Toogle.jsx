@@ -6,29 +6,26 @@ const ToggleContext = createContext();
 const Toggle = ({ children }) => {
    const [isActive, setIsActive] = useState(false);
 
-   const toggle = () => {
-      setIsActive(!isActive);
-   };
-
-   return <ToggleContext.Provider value={{ isActive, toggle }}>{children}</ToggleContext.Provider>;
+   return (
+      <ToggleContext.Provider value={{ isActive, toggle: () => setIsActive(prev => !prev) }}>
+         {children}
+      </ToggleContext.Provider>
+   );
 };
 
 const ToggleButton = () => {
    const { toggle } = useContext(ToggleContext);
-
    return <button onClick={toggle}>Toggle</button>;
 };
 
 const Active = ({ children }) => {
    const { isActive } = useContext(ToggleContext);
-
-   return isActive ? <>{children}</> : null;
+   return isActive ? children : null;
 };
 
 const Inactive = ({ children }) => {
    const { isActive } = useContext(ToggleContext);
-
-   return !isActive ? <>{children}</> : null;
+   return !isActive ? children : null;
 };
 
 Toggle.Active = Active;
@@ -42,9 +39,6 @@ Active.propTypes = {
    children: PropTypes.node.isRequired,
 };
 Inactive.propTypes = {
-   children: PropTypes.node.isRequired,
-};
-ToggleButton.propTypes = {
    children: PropTypes.node.isRequired,
 };
 
